@@ -28,7 +28,7 @@ export async function updateIdeaAction(id: number, title: string, prompt: string
     ideas[index].url = url;
     ideas[index].draftUrl = draftUrl;
     ideas[index].updatedAt = new Date().toISOString();
-    await fs.promises.writeFile(path.join(process.cwd(), '../data/ideas.json'), JSON.stringify(ideas, null, 2), 'utf8');
+    await fs.promises.writeFile(path.join(process.cwd(), 'data/ideas.json'), JSON.stringify(ideas, null, 2), 'utf8');
   }
   revalidatePath('/');
 }
@@ -41,7 +41,7 @@ export async function generateAndDraftArticleAction(ideaId: number) {
 
   try {
     // 命令プロンプトを読み込む
-    const instructionsPath = path.join(process.cwd(), '../.agent/instructions.md');
+    const instructionsPath = path.join(process.cwd(), '.agent/instructions.md');
     let systemPrompt = "あなたはプロのライターです。";
     if (fs.existsSync(instructionsPath)) {
       systemPrompt = await fs.promises.readFile(instructionsPath, 'utf8');
@@ -156,7 +156,7 @@ export async function generateAndDraftArticleAction(ideaId: number) {
     // 生成成功時にURLと更新日時を保存
     idea.draftUrl = gasData.url;
     idea.updatedAt = new Date().toISOString();
-    await fs.promises.writeFile(path.join(process.cwd(), '../data/ideas.json'), JSON.stringify(ideas, null, 2), 'utf8');
+    await fs.promises.writeFile(path.join(process.cwd(), 'data/ideas.json'), JSON.stringify(ideas, null, 2), 'utf8');
     revalidatePath('/');
     
     return { success: true, url: gasData.url };

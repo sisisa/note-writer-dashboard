@@ -12,7 +12,7 @@ export interface Idea {
   updatedAt: string; // Tracks the last modification time
 }
 
-const dataDir = path.join(process.cwd(), '../data');
+const dataDir = path.join(process.cwd(), 'data');
 const ideasPath = path.join(dataDir, 'ideas.json');
 
 export async function getIdeas(): Promise<Idea[]> {
