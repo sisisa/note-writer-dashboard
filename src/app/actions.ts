@@ -20,15 +20,22 @@ export async function toggleIdeaAction(id: number) {
 }
 
 export async function updateIdeaAction(id: number, title: string, prompt: string, url: string, draftUrl: string) {
-  const ideas = await getIdeas();
-  const index = ideas.findIndex(i => i.id === id);
-  if (index !== -1) {
-    ideas[index].title = title;
-    ideas[index].prompt = prompt;
-    ideas[index].url = url;
-    ideas[index].draftUrl = draftUrl;
-    ideas[index].updatedAt = new Date().toISOString();
-    await fs.promises.writeFile(path.join(process.cwd(), 'data/ideas.json'), JSON.stringify(ideas, null, 2), 'utf8');
+  const gasUrl = process.env.NEXT_PUBLIC_GAS_WEB_APP_URL;
+  if (!gasUrl) return;
+
+  try {
+    const res = await fetch(gasUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "update_idea", id, title, prompt, url, draftUrl }),
+      cache: 'no-store'
+    });
+    const json = await res.json();
+    if (!json.success) {
+      console.error('GAS POST (update) Error:', json.error);
+    }
+  } catch (err) {
+    console.error('Error updating idea in GAS:', err);
   }
   revalidatePath('/');
 }
@@ -134,6 +141,8 @@ export async function generateAndDraftArticleAction(ideaId: number) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        action: "create_doc",
+        id: idea.id, // GAS側でdraftUrlもスプレッドシートに保存させるためIDを渡す
         title: idea.title,
         content: articleContent
       }),
@@ -153,10 +162,7 @@ export async function generateAndDraftArticleAction(ideaId: number) {
       };
     }
     
-    // 生成成功時にURLと更新日時を保存
-    idea.draftUrl = gasData.url;
-    idea.updatedAt = new Date().toISOString();
-    await fs.promises.writeFile(path.join(process.cwd(), 'data/ideas.json'), JSON.stringify(ideas, null, 2), 'utf8');
+    // 生成・更新成功時にキャッシュを破棄し、画面に反映させる
     revalidatePath('/');
     
     return { success: true, url: gasData.url };
