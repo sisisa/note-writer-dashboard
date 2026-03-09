@@ -53,7 +53,15 @@ export async function addIdea(title: string, prompt: string = ""): Promise<Idea>
       body: JSON.stringify({ action: "add_idea", title, prompt }),
       cache: 'no-store'
     });
-    const json = await res.json();
+    const text = await res.text();
+    let json;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      console.error('GAS POST (add) Error (Not JSON):', text.substring(0, 200));
+      return fallbackIdea;
+    }
+    
     if (json.success && json.data) {
       return json.data as Idea;
     }
