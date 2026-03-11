@@ -5,10 +5,23 @@ import { toggleIdeaAction, generateAndDraftArticleAction, updateIdeaAction } fro
 import { Idea } from "@/lib/data";
 
 function IdeaItem({ idea }: { idea: Idea }) {
+  // Parsing prompt
+  let parsedDetail = "";
+  let parsedInsight = "";
+  try {
+    const parsed = JSON.parse(idea.prompt);
+    parsedDetail = parsed.detail || "";
+    parsedInsight = parsed.insight || "";
+  } catch {
+    // 過去の一次元データ互換用
+    parsedInsight = idea.prompt || "";
+  }
+
   const [isPending, startTransition] = useTransition();
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(idea.title);
-  const [editPrompt, setEditPrompt] = useState(idea.prompt || "");
+  const [editDetail, setEditDetail] = useState(parsedDetail);
+  const [editInsight, setEditInsight] = useState(parsedInsight);
   const [editUrl, setEditUrl] = useState(idea.url || "");
   const [editDraftUrl, setEditDraftUrl] = useState(idea.draftUrl || "");
 
@@ -27,7 +40,7 @@ function IdeaItem({ idea }: { idea: Idea }) {
 
   const handleSaveEdit = async () => {
     startTransition(async () => {
-      await updateIdeaAction(idea.id, editTitle, editPrompt, editUrl, editDraftUrl);
+      await updateIdeaAction(idea.id, editTitle, editDetail, editInsight, editUrl, editDraftUrl);
       setIsEditing(false);
     });
   };
@@ -46,14 +59,21 @@ function IdeaItem({ idea }: { idea: Idea }) {
           type="text" 
           value={editTitle} 
           onChange={e => setEditTitle(e.target.value)} 
-          placeholder="タイトル・アイデア"
+          placeholder="【必須】テーマ"
           className="w-full px-3 py-2 bg-black/40 border border-white/20 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
         />
         <textarea 
-          value={editPrompt} 
-          onChange={e => setEditPrompt(e.target.value)} 
-          placeholder="プロンプトやメモ（任意）"
+          value={editDetail} 
+          onChange={e => setEditDetail(e.target.value)} 
+          placeholder="【任意】詳細（背景、状況など）"
           rows={2}
+          className="w-full px-3 py-2 bg-black/40 border border-white/20 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm custom-scrollbar"
+        />
+        <textarea 
+          value={editInsight} 
+          onChange={e => setEditInsight(e.target.value)} 
+          placeholder="【必須】気付き（教訓、考察事項）"
+          rows={3}
           className="w-full px-3 py-2 bg-black/40 border border-white/20 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm custom-scrollbar"
         />
         <input 
@@ -107,9 +127,14 @@ function IdeaItem({ idea }: { idea: Idea }) {
           <p className={`text-sm md:text-base mb-2 sm:mb-0 ${idea.isUsed ? "line-through text-white/50" : "text-white/90"}`}>
             {idea.title}
           </p>
-          {idea.prompt && (
-             <p className="text-xs text-white/50 mt-1 line-clamp-2">{idea.prompt}</p>
-          )}
+          <div className="flex flex-col gap-1 mt-2">
+            {parsedDetail && (
+               <p className="text-xs text-white/40 line-clamp-2">詳細: {parsedDetail}</p>
+            )}
+            {parsedInsight && (
+               <p className="text-xs text-white/60 line-clamp-3">気付き: {parsedInsight}</p>
+            )}
+          </div>
         </div>
         
         <div className="shrink-0 flex gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 custom-scrollbar mt-2 sm:mt-0">

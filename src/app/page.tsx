@@ -7,6 +7,39 @@ export default async function Home() {
   // ※ポートフォリオ用に、実際のバックエンドやDBの代わりにローカルJSONまたは外部APIからアイデアを取得する想定の構成です
   const ideas = await getIdeas();
 
+  const canvaTemplates = [
+    {
+      id: "パターン1",
+      type: "シンプル×テキスト強調型",
+      genre: "ビジネス、技術解説、お金系",
+      url: process.env.CANVA_PATTERN1_URL || "#"
+    },
+    {
+      id: "パターン2",
+      type: "写真×オーバーレイ型",
+      genre: "健康、ダイエット、人間関係",
+      url: process.env.CANVA_PATTERN2_URL || "#"
+    },
+    {
+      id: "パターン3",
+      type: "イラスト×ポップ型",
+      genre: "副業、ライフハック、初心者向け",
+      url: process.env.CANVA_PATTERN3_URL || "#"
+    },
+    {
+      id: "パターン4",
+      type: "グラデーション×モダン型",
+      genre: "トレンド、最新AI、全般",
+      url: process.env.CANVA_PATTERN4_URL || "#"
+    },
+    {
+      id: "パターン5",
+      type: "枠線×フォーマル型",
+      genre: "投資、専門的な解説、硬めの内容",
+      url: process.env.CANVA_PATTERN5_URL || "#"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-[#0A0A0B] text-slate-200 selection:bg-purple-500/30 font-sans">
       {/* Dynamic Background Pattern */}
@@ -42,8 +75,8 @@ export default async function Home() {
         {/* Two Column Layout container spanning remaining vertical space */}
         <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 gap-8 min-h-0">
 
-          {/* Left Column: Quick Entry */}
-          <div className="lg:col-span-5 flex flex-col lg:h-full lg:overflow-hidden order-1 lg:order-1">
+          {/* Left Column: Quick Entry & Templates */}
+          <div className="lg:col-span-5 flex flex-col gap-6 lg:h-full lg:overflow-y-auto order-1 lg:order-1 custom-scrollbar">
             <section className="bg-white/[0.02] border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-3xl shrink-0">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,6 +86,37 @@ export default async function Home() {
               </h2>
               <p className="text-xs text-white/50 mb-4">ここで入力した内容は右側の「アイデアストック」に新しいアイデアとして追加されます。</p>
               <InsightForm />
+            </section>
+
+            {/* Template Links Section */}
+            <section className="bg-white/[0.02] border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-3xl shrink-0">
+              <details className="group">
+                <summary className="flex items-center justify-between cursor-pointer list-none appearance-none font-bold text-lg">
+                  <span className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    記事用画像テンプレート (Canva)
+                  </span>
+                  <span className="transition duration-300 group-open:rotate-180 text-white/50">
+                    <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <div className="mt-4 flex flex-col gap-3">
+                  {canvaTemplates.map((template, idx) => (
+                    <a key={idx} href={template.url} target="_blank" rel="noreferrer" 
+                       className="block p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all font-medium">
+                      <div className="flex justify-between items-start mb-1 gap-2">
+                        <span className="text-white font-bold whitespace-nowrap">{template.id}</span>
+                        <span className="text-[10px] text-pink-300 bg-pink-500/20 px-2 py-0.5 rounded-full border border-pink-500/30 text-right">
+                          {template.type}
+                        </span>
+                      </div>
+                      <p className="text-xs text-white/50">{template.genre}</p>
+                    </a>
+                  ))}
+                </div>
+              </details>
             </section>
           </div>
 

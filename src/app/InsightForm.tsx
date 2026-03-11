@@ -16,12 +16,25 @@ export default function InsightForm() {
 
   return (
     <form ref={formRef} action={handleSubmit} className="flex flex-col gap-3">
-      <textarea
-        name="content"
-        placeholder="新しいアイデアやストックしておきたい情報を入力..."
-        rows={4}
+      <input
+        type="text"
+        name="title"
+        placeholder="【必須】テーマ"
         required
-        className="w-full resize-none rounded-xl bg-white/5 border border-white/10 p-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all custom-scrollbar"
+        className="w-full rounded-xl bg-white/5 border border-white/10 p-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all custom-scrollbar"
+      />
+      <textarea
+        name="detail"
+        placeholder="【任意】詳細"
+        rows={2}
+        className="w-full resize-none rounded-xl bg-white/5 border border-white/10 p-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all custom-scrollbar"
+      />
+      <textarea
+        name="insight"
+        placeholder="【必須】気付き"
+        rows={3}
+        required
+        className="w-full resize-none rounded-xl bg-white/5 border border-white/10 p-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all custom-scrollbar"
       />
       <div className="flex justify-end">
         <button
