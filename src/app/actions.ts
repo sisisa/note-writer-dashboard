@@ -9,12 +9,13 @@ export async function addInsightAction(formData: FormData) {
   const title = formData.get('title') as string;
   const detail = formData.get('detail') as string;
   const insight = formData.get('insight') as string;
+  const category = formData.get('category') as string || "未分類";
   
   if (!title || !title.trim() || !insight || !insight.trim()) return;
 
   const promptData = JSON.stringify({ detail: detail.trim(), insight: insight.trim() });
   
-  await dbAddIdea(title, promptData);
+  await dbAddIdea(title, promptData, category);
   revalidatePath('/');
 }
 
@@ -23,7 +24,7 @@ export async function toggleIdeaAction(id: number) {
   revalidatePath('/');
 }
 
-export async function updateIdeaAction(id: number, title: string, detail: string, insight: string, url: string, draftUrl: string) {
+export async function updateIdeaAction(id: number, title: string, detail: string, insight: string, category: string, url: string, draftUrl: string) {
   const gasUrl = process.env.NEXT_PUBLIC_GAS_WEB_APP_URL;
   if (!gasUrl) return;
 
@@ -33,7 +34,7 @@ export async function updateIdeaAction(id: number, title: string, detail: string
     const res = await fetch(gasUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "update_idea", id, title, prompt, url, draftUrl }),
+      body: JSON.stringify({ action: "update_idea", id, title, prompt, category, url, draftUrl }),
       cache: 'no-store'
     });
     const json = await res.json();
@@ -87,6 +88,7 @@ export async function generateAndDraftArticleAction(ideaId: number) {
         専門的な概念を説明する際は、「人に仕事を丸投げせず順番に頼むのと同じように」といった、誰もが日常でイメージしやすい身近な例えを用いて分かりやすく噛み砕いてください。
 
         # Input Data
+        - 【カテゴリ】: ${idea.category || "未分類"}
         - 【テーマ】: ${idea.title}
         - 【詳細・背景】: ${detail || "特になし"}
         - 【気付き・考察事項】: ${insight}

@@ -22,6 +22,7 @@ function IdeaItem({ idea }: { idea: Idea }) {
   const [editTitle, setEditTitle] = useState(idea.title);
   const [editDetail, setEditDetail] = useState(parsedDetail);
   const [editInsight, setEditInsight] = useState(parsedInsight);
+  const [editCategory, setEditCategory] = useState(idea.category || "その他");
   const [editUrl, setEditUrl] = useState(idea.url || "");
   const [editDraftUrl, setEditDraftUrl] = useState(idea.draftUrl || "");
 
@@ -40,7 +41,7 @@ function IdeaItem({ idea }: { idea: Idea }) {
 
   const handleSaveEdit = async () => {
     startTransition(async () => {
-      await updateIdeaAction(idea.id, editTitle, editDetail, editInsight, editUrl, editDraftUrl);
+      await updateIdeaAction(idea.id, editTitle, editDetail, editInsight, editCategory, editUrl, editDraftUrl);
       setIsEditing(false);
     });
   };
@@ -55,13 +56,24 @@ function IdeaItem({ idea }: { idea: Idea }) {
   if (isEditing) {
     return (
       <div className="p-4 rounded-xl border border-blue-500/50 bg-white/10 flex flex-col gap-3">
-        <input 
-          type="text" 
-          value={editTitle} 
-          onChange={e => setEditTitle(e.target.value)} 
-          placeholder="【必須】テーマ"
-          className="w-full px-3 py-2 bg-black/40 border border-white/20 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
-        />
+        <div className="flex gap-2">
+          <input 
+            type="text" 
+            value={editTitle} 
+            onChange={e => setEditTitle(e.target.value)} 
+            placeholder="【必須】テーマ"
+            className="flex-1 px-3 py-2 bg-black/40 border border-white/20 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+          />
+          <select
+            value={editCategory}
+            onChange={e => setEditCategory(e.target.value)}
+            className="w-32 px-2 py-2 bg-black/40 border border-white/20 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs text-white appearance-none cursor-pointer"
+          >
+            <option value="AI系">AI系</option>
+            <option value="日常系">日常系</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
         <textarea 
           value={editDetail} 
           onChange={e => setEditDetail(e.target.value)} 
@@ -122,6 +134,13 @@ function IdeaItem({ idea }: { idea: Idea }) {
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] uppercase font-bold tracking-wider text-white/40">
               更新: {updatedDate}
+            </span>
+            <span className={`text-[10px] px-2 py-0.5 rounded-full border border-white/10 ${
+              idea.category === 'AI系' ? 'bg-blue-500/20 text-blue-300' : 
+              idea.category === '日常系' ? 'bg-emerald-500/20 text-emerald-300' : 
+              'bg-white/5 text-white/50'
+            }`}>
+              {idea.category || '未分類'}
             </span>
           </div>
           <p className={`text-sm md:text-base mb-2 sm:mb-0 ${idea.isUsed ? "line-through text-white/50" : "text-white/90"}`}>
@@ -191,10 +210,12 @@ function IdeaItem({ idea }: { idea: Idea }) {
 export default function IdeaList({ initialIdeas }: { initialIdeas: Idea[] }) {
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState<"unused" | "used">("unused");
+  const [categoryFilter, setCategoryFilter] = useState("すべて");
 
   const filtered = initialIdeas.filter(idea => {
     if (filterType === "unused" && idea.isUsed) return false;
     if (filterType === "used" && !idea.isUsed) return false;
+    if (categoryFilter !== "すべて" && idea.category !== categoryFilter) return false;
     if (search && !idea.title.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   }).sort((a, b) => {
@@ -205,15 +226,28 @@ export default function IdeaList({ initialIdeas }: { initialIdeas: Idea[] }) {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="mb-4 flex flex-col sm:flex-row gap-3 shrink-0">
-        <input
-          type="text"
-          placeholder="アイデアを検索..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="flex-1 px-4 py-2 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white placeholder-white/50"
-        />
-        <div className="flex bg-white/5 border border-white/10 rounded-xl p-1 shrink-0">
+      <div className="mb-4 flex flex-col gap-3 shrink-0">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <input
+            type="text"
+            placeholder="アイデアを検索..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="flex-1 px-4 py-2 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white placeholder-white/50"
+          />
+          <select
+            value={categoryFilter}
+            onChange={e => setCategoryFilter(e.target.value)}
+            className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm text-white appearance-none cursor-pointer"
+          >
+            <option value="すべて" className="bg-slate-800">すべてのカテゴリ</option>
+            <option value="AI系" className="bg-slate-800">AI系</option>
+            <option value="日常系" className="bg-slate-800">日常系</option>
+            <option value="その他" className="bg-slate-800">その他</option>
+          </select>
+        </div>
+        
+        <div className="flex bg-white/5 border border-white/10 rounded-xl p-1 self-start">
           <button
             onClick={() => setFilterType("unused")}
             className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${filterType === "unused" ? "bg-white/10 text-white shadow-sm" : "text-white/50 hover:text-white/80"}`}

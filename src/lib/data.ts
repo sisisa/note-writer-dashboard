@@ -8,6 +8,7 @@ export interface Idea {
   isUsed: boolean;
   url: string;      // The final published URL
   draftUrl: string; // The URL of the drafted Google Doc
+  category: string; // "AI系", "日常系", etc.
   createdAt: string;
   updatedAt: string; // Tracks the last modification time
 }
@@ -39,10 +40,10 @@ export async function getIdeas(): Promise<Idea[]> {
   }
 }
 
-export async function addIdea(title: string, prompt: string = ""): Promise<Idea> {
+export async function addIdea(title: string, prompt: string = "", category: string = "未分類"): Promise<Idea> {
   const gasUrl = getGasUrl();
   const now = new Date().toISOString();
-  const fallbackIdea: Idea = { id: Date.now(), title, prompt, isUsed: false, url: "", draftUrl: "", createdAt: now, updatedAt: now };
+  const fallbackIdea: Idea = { id: Date.now(), title, prompt, isUsed: false, url: "", draftUrl: "", category, createdAt: now, updatedAt: now };
   
   if (!gasUrl) return fallbackIdea;
 
@@ -50,7 +51,7 @@ export async function addIdea(title: string, prompt: string = ""): Promise<Idea>
     const res = await fetch(gasUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "add_idea", title, prompt }),
+      body: JSON.stringify({ action: "add_idea", title, prompt, category }),
       cache: 'no-store'
     });
     const text = await res.text();

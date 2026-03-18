@@ -16,16 +16,26 @@ export default function InsightForm() {
 
   return (
     <form ref={formRef} action={handleSubmit} className="flex flex-col gap-3">
-      <input
-        type="text"
-        name="title"
-        placeholder="【必須】テーマ"
-        required
-        className="w-full rounded-xl bg-white/5 border border-white/10 p-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all custom-scrollbar"
-      />
+      <div className="flex flex-col sm:flex-row gap-3">
+        <input
+          type="text"
+          name="title"
+          placeholder="【必須】テーマ（何について考えたか）"
+          required
+          className="flex-1 rounded-xl bg-white/5 border border-white/10 p-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all"
+        />
+        <select
+          name="category"
+          className="w-full sm:w-40 rounded-xl bg-white/10 border border-white/10 p-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all appearance-none cursor-pointer"
+        >
+          <option value="AI系" className="bg-slate-800">AI系</option>
+          <option value="日常系" className="bg-slate-800">日常系</option>
+          <option value="その他" className="bg-slate-800">その他</option>
+        </select>
+      </div>
       <textarea
         name="detail"
-        placeholder="【任意】詳細"
+        placeholder="【任意】詳細（具体的な状況、背景、感情など）"
         rows={2}
         className="w-full resize-none rounded-xl bg-white/5 border border-white/10 p-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all custom-scrollbar"
       />

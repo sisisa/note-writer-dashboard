@@ -12,31 +12,31 @@ export default async function Home() {
       id: "パターン1",
       type: "シンプル×テキスト強調型",
       genre: "ビジネス、技術解説、お金系",
-      url: process.env.CANVA_PATTERN1_URL || "#"
+      url: process.env.NEXT_PUBLIC_CANVA_PATTERN1_URL || "#"
     },
     {
       id: "パターン2",
       type: "写真×オーバーレイ型",
       genre: "健康、ダイエット、人間関係",
-      url: process.env.CANVA_PATTERN2_URL || "#"
+      url: process.env.NEXT_PUBLIC_CANVA_PATTERN2_URL || "#"
     },
     {
       id: "パターン3",
       type: "イラスト×ポップ型",
       genre: "副業、ライフハック、初心者向け",
-      url: process.env.CANVA_PATTERN3_URL || "#"
+      url: process.env.NEXT_PUBLIC_CANVA_PATTERN3_URL || "#"
     },
     {
       id: "パターン4",
       type: "グラデーション×モダン型",
       genre: "トレンド、最新AI、全般",
-      url: process.env.CANVA_PATTERN4_URL || "#"
+      url: process.env.NEXT_PUBLIC_CANVA_PATTERN4_URL || "#"
     },
     {
       id: "パターン5",
       type: "枠線×フォーマル型",
       genre: "投資、専門的な解説、硬めの内容",
-      url: process.env.CANVA_PATTERN5_URL || "#"
+      url: process.env.NEXT_PUBLIC_CANVA_PATTERN5_URL || "#"
     }
   ];
 
