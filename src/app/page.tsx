@@ -52,11 +52,16 @@ export default async function Home() {
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/10">
           <div>
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
-              Note Writer Dashboard
+              note ダッシュボード
             </h1>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-4">
+            <a href="https://docs.google.com/spreadsheets/d/1Ez3gzKsTRoXE01tCoN0ZGyamCTnXCExsXGJ46VSKUxk/edit?gid=0#gid=0" target="_blank" rel="noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-sm font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span> note記事データ格納用スプレッドシート
+            </a>
+
             <a href="https://notebooklm.google.com/" target="_blank" rel="noreferrer"
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-sm font-medium">
               <span className="w-2 h-2 rounded-full bg-blue-400"></span> NotebookLM
@@ -67,7 +72,7 @@ export default async function Home() {
             </a>
             <a href="https://note.com/" target="_blank" rel="noreferrer"
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-sm font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-400"></span> note
+              <span className="w-2 h-2 rounded-full bg-white"></span> note
             </a>
           </div>
         </header>
@@ -104,8 +109,8 @@ export default async function Home() {
                 </summary>
                 <div className="mt-4 flex flex-col gap-3">
                   {canvaTemplates.map((template, idx) => (
-                    <a key={idx} href={template.url} target="_blank" rel="noreferrer" 
-                       className="block p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all font-medium">
+                    <a key={idx} href={template.url} target="_blank" rel="noreferrer"
+                      className="block p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all font-medium">
                       <div className="flex justify-between items-start mb-1 gap-2">
                         <span className="text-white font-bold whitespace-nowrap">{template.id}</span>
                         <span className="text-[10px] text-pink-300 bg-pink-500/20 px-2 py-0.5 rounded-full border border-pink-500/30 text-right">

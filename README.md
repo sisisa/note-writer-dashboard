@@ -1,4 +1,4 @@
-# Note Writer Dashboard
+# note ダッシュボード
 
 > 個人の技術ブログやアイデア出しを効率化する、AI自動執筆・Google Docs連携機能を持ったNext.js製ダッシュボード（ポートフォリオ作品）です。
 
